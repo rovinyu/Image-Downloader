@@ -39,7 +39,10 @@ if __name__ == '__main__':
         dir_name = os.path.relpath(sub_dir, FLAGS.image_dir)
         label_name = dir_name.split(os.path.sep)
         if len(label_name) > 1:
+            number = len([lists for lists in os.listdir(sub_dir) if os.path.isfile(os.path.join(sub_dir, lists))])
+            if number > 65:
+                continue
             name = label_name[-1]
             number = 100
-            engine = "Baidu"
+            engine = "Google"
             start_crawl(name, number, sub_dir, engine)

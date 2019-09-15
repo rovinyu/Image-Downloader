@@ -250,7 +250,11 @@ def crawl_image_urls(keywords, engine="Google", max_number=10000,
                 "--proxy=" + proxy,
                 "--proxy-type=" + proxy_type,
             ]
-        driver = webdriver.PhantomJS(executable_path=phantomjs_path, service_log_path=r"E:/watchlog.log",
+        if sys.platform.startswith("win"):
+            driver = webdriver.PhantomJS(executable_path=phantomjs_path, service_log_path=r"E:/watchlog.log",
+                                     service_args=phantomjs_args, desired_capabilities=dcap)
+        else:
+            driver = webdriver.PhantomJS(executable_path=phantomjs_path,
                                      service_args=phantomjs_args, desired_capabilities=dcap)
 
     if engine == "Google":
