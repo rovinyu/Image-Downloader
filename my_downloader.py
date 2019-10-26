@@ -10,11 +10,12 @@ import os
 import crawler
 import downloader
 
-def start_crawl(keywords, number, output, engine):
+def start_crawl(keywords, number, output, engine, num_threads):
     crawled_urls = crawler.crawl_image_urls(keywords,
                                             engine=engine, max_number=number)
-    downloader.download_images(image_urls=crawled_urls, dst_dir=output,
-                               file_prefix=engine)
+    if crawled_urls:
+        downloader.download_images(image_urls=crawled_urls, dst_dir=output,
+                               file_prefix=engine, concurrency=num_threads)
 
 if __name__ == '__main__':
     #main(sys.argv[1:])
@@ -27,6 +28,7 @@ if __name__ == '__main__':
     )
 
     FLAGS, unparsed = parser.parse_known_args()
+
     if not os.path.isdir(FLAGS.image_dir):
         print("Path doens't exist: " + FLAGS.image_dir)
         exit(-1)
@@ -45,4 +47,13 @@ if __name__ == '__main__':
             name = label_name[-1]
             number = 100
             engine = "Google"
-            start_crawl(name, number, sub_dir, engine)
+            num_threads = 5
+            start_crawl(name, number, sub_dir, engine, num_threads)
+    '''
+    name = "椅子"
+    number = 100
+    engine = "Google"
+    num_threads = 5
+    
+    start_crawl(name, number, FLAGS.image_dir, engine, num_threads)
+    '''

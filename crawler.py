@@ -256,11 +256,14 @@ def crawl_image_urls(keywords, engine="Google", max_number=10000,
         else:
             driver = webdriver.PhantomJS(executable_path=phantomjs_path,
                                      service_args=phantomjs_args, desired_capabilities=dcap)
-
     if engine == "Google":
         driver.set_window_size(10000, 7500)
-        driver.get(query_url)
-        image_urls = google_image_url_from_webpage(driver)
+        try:
+            driver.get(query_url)
+            image_urls = google_image_url_from_webpage(driver)
+        except Exception as e:
+            print("Exception: ", e)
+            return None
     elif engine == "Bing":
         driver.set_window_size(1920, 1080)
         driver.get(query_url)
@@ -271,8 +274,10 @@ def crawl_image_urls(keywords, engine="Google", max_number=10000,
         # image_urls = baidu_image_url_from_webpage(driver)
         image_urls = baidu_get_image_url_using_api(keywords, max_number=max_number, face_only=face_only,
                                                    proxy=proxy, proxy_type=proxy_type)
-
-    driver.close()
+    try:
+        driver.close()
+    except Exception:
+        return None
 
     if max_number > len(image_urls):
         output_num = len(image_urls)
